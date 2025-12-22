@@ -40,3 +40,10 @@ export const appointmentAdminSchema = z.object({
   status: z.enum(["BOOKED", "CANCELLED", "COMPLETED", "NOSHOW"]),
   serviceId: z.string(),
 });
+
+export const reviewSchema = z.object({
+  name: z.string().min(2),
+  rating: z.number().int().min(1).max(5),
+  comment: z.string().min(5).max(600),
+  appointmentId: z.string().optional(),
+});

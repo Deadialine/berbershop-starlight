@@ -7,7 +7,7 @@ export default function AdminLoginPage() {
       <div className="space-y-4 text-center">
         <div className="text-sm uppercase tracking-[0.3em] text-accent-cyan">Starlight Admin</div>
         <LoginForm />
-        <Link href="/" className="block text-sm text-white/60 hover:text-white">Back to site</Link>
+        <Link href="/" className="block text-sm text-white/60 hover:text-white">Επιστροφή</Link>
       </div>
     </div>
   );

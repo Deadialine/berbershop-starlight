@@ -9,39 +9,44 @@ export default function InfoPage() {
       <div className="mx-auto max-w-5xl space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-accent-cyan">Info</p>
-            <h1 className="font-display text-4xl">Starlight details</h1>
+            <p className="text-sm uppercase tracking-[0.2em] text-accent-cyan">Πληροφορίες</p>
+            <h1 className="font-display text-4xl">Λεπτομέρειες Starlight</h1>
           </div>
-          <Link href="/" className="text-sm text-white/60 hover:text-white">Home</Link>
+          <Link href="/" className="text-sm text-white/60 hover:text-white">Αρχική</Link>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           <Card>
-            <div className="flex items-center gap-2 text-accent-cyan"><Clock3 className="h-5 w-5" /> Hours</div>
-            <p className="mt-2 text-white/70">Mon–Sat: 10:00 – 19:00</p>
-            <p className="text-white/60">Sun: Closed</p>
+            <div className="flex items-center gap-2 text-accent-cyan"><Clock3 className="h-5 w-5" /> Ωράριο</div>
+            <p className="mt-2 text-white/70">Δευ–Σαβ: 10:00 – 19:00</p>
+            <p className="text-white/60">Κυριακή: Κλειστά</p>
           </Card>
           <Card>
-            <div className="flex items-center gap-2 text-accent-cyan"><MapPin className="h-5 w-5" /> Location</div>
-            <p className="mt-2 text-white/70">123 Crescent Ave</p>
-            <p className="text-white/60">New York, NY</p>
+            <div className="flex items-center gap-2 text-accent-cyan"><MapPin className="h-5 w-5" /> Διεύθυνση</div>
+            <p className="mt-2 text-white/70">Σκάλα, Λακωνίας</p>
+            <p className="text-white/60">Απέναντι από το Grill Mafia</p>
           </Card>
           <Card>
-            <div className="flex items-center gap-2 text-accent-cyan"><PhoneCall className="h-5 w-5" /> Contact</div>
-            <p className="mt-2 text-white/70">(555) 000-1977</p>
+            <div className="flex items-center gap-2 text-accent-cyan"><PhoneCall className="h-5 w-5" /> Επικοινωνία</div>
+            <p className="mt-2 text-white/70">+30 210 000 1977</p>
             <p className="text-white/60">hello@starlight.shop</p>
           </Card>
         </div>
         <Card className="grid gap-6 md:grid-cols-2">
           <div>
-            <h3 className="font-display text-2xl">Services</h3>
-            <p className="text-white/70">Fades, tapers, beard sculpt, hot towel shave, kids cut, premium wash & style. Prices displayed as pay-in-shop.</p>
-            <Button asChild className="mt-4"><Link href="/book">Book now</Link></Button>
+            <h3 className="font-display text-2xl">Υπηρεσίες</h3>
+            <p className="text-white/70">Κούρεμα €10, Fade €12, Γένια €5, Fade + Γένια €17, παιδικά κουρέματα, λούσιμο & styling. Πληρωμή στο κατάστημα.</p>
+            <Button asChild className="mt-4"><Link href="/book">Κλείσε ραντεβού</Link></Button>
           </div>
           <div>
-            <h3 className="font-display text-2xl">Cancellation</h3>
-            <p className="text-white/70">Use your confirmation code or link to cancel anytime. Please cancel at least 3 hours before your slot so we can open it to others.</p>
-            <p className="mt-2 text-white/60">No double-booking. Lead time of 2 hours and 30-day booking window enforced.</p>
+            <h3 className="font-display text-2xl">Ακύρωση</h3>
+            <p className="text-white/70">Με κωδικό επιβεβαίωσης ή direct link ακυρώνεις όποτε χρειάζεται. Ιδανικά 3 ώρες πριν.</p>
+            <p className="mt-2 text-white/60">Χωρίς διπλοκρατήσεις, lead time 2 ώρες, παράθυρο 30 ημερών.</p>
           </div>
+        </Card>
+        <Card>
+          <h3 className="font-display text-2xl">Δημήτρης Λεοντακιανάκης</h3>
+          <p className="text-white/70">Ιδιοκτήτης & κουρέας. Σπουδές κουρέματος στην Αθήνα, εμπειρία σε premium lounge barbershops και εξαιρετικές κριτικές για fades και γενειάδες.</p>
+          <p className="mt-2 text-white/60">Εδραιωμένο το 2025 στη Σκάλα Λακωνίας.</p>
         </Card>
         <Card className="grid gap-6 md:grid-cols-3">
           {[1,2,3,4,5,6].map((i) => (

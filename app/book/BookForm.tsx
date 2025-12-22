@@ -87,19 +87,19 @@ export function BookForm({ services }: { services: Service[] }) {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error?.["formErrors"] || data.error?.message || "Unable to book");
+      if (!res.ok) throw new Error(data.error?.["formErrors"] || data.error?.message || "Δεν ολοκληρώθηκε η κράτηση");
       setAppointment(data.appointment);
-      toast.success("Appointment booked. Confirmation ready.");
+      toast.success("Το ραντεβού κλείστηκε. Έτοιμος ο κωδικός επιβεβαίωσης.");
       router.refresh();
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
-      toast.error(err.message || "Booking failed");
+      setError(err.message || "Κάτι πήγε στραβά");
+      toast.error(err.message || "Αποτυχία κράτησης");
     } finally {
       setSubmitting(false);
     }
   }
 
-  if (!services.length) return <p className="text-white/70">No services are active right now.</p>;
+  if (!services.length) return <p className="text-white/70">Δεν υπάρχουν ενεργές υπηρεσίες αυτή τη στιγμή.</p>;
 
   return (
     <div className="grid gap-8 lg:grid-cols-3">
@@ -112,25 +112,25 @@ export function BookForm({ services }: { services: Service[] }) {
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm text-white/70">Service</span>
+              <span className="text-sm text-white/70">Υπηρεσία</span>
               <Select value={serviceId} onChange={(e) => setServiceId(e.target.value)} required>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
-                    {service.name} • {service.durationMinutes} min • {service.priceText}
+                    {service.name} • {service.durationMinutes} λεπτά • {service.priceText}
                   </option>
                 ))}
               </Select>
             </label>
             <label className="space-y-2">
-              <span className="text-sm text-white/70">Date</span>
+              <span className="text-sm text-white/70">Ημερομηνία</span>
               <Input type="date" min={minDate} max={maxDate} value={date} onChange={(e) => setDate(e.target.value)} required />
             </label>
           </div>
 
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-white/70">Select a time</span>
-              {loadingSlots && <span className="text-xs text-accent-cyan">Loading slots…</span>}
+              <span className="text-sm text-white/70">Επέλεξε ώρα</span>
+              {loadingSlots && <span className="text-xs text-accent-cyan">Φόρτωση…</span>}
             </div>
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
               {slots.map((slot) => {
@@ -155,60 +155,60 @@ export function BookForm({ services }: { services: Service[] }) {
               })}
             </div>
             {!loadingSlots && date && !slots.length && (
-              <p className="mt-3 text-sm text-white/60">No slots available for this day. Try another.</p>
+              <p className="mt-3 text-sm text-white/60">Δεν υπάρχουν διαθέσιμες ώρες. Δοκίμασε άλλη μέρα.</p>
             )}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm text-white/70">Name</span>
-              <Input name="name" placeholder="Your name" required />
+              <span className="text-sm text-white/70">Όνομα</span>
+              <Input name="name" placeholder="Το όνομά σου" required />
             </label>
             <label className="space-y-2">
-              <span className="text-sm text-white/70">Phone</span>
-              <Input name="phone" type="tel" inputMode="tel" placeholder="(555)" required />
+              <span className="text-sm text-white/70">Τηλέφωνο</span>
+              <Input name="phone" type="tel" inputMode="tel" placeholder="+30" required />
             </label>
             <label className="space-y-2">
-              <span className="text-sm text-white/70">Email (optional)</span>
+              <span className="text-sm text-white/70">Email (προαιρετικό)</span>
               <Input name="email" type="email" placeholder="you@email.com" />
             </label>
             <label className="space-y-2">
-              <span className="text-sm text-white/70">Note (optional)</span>
-              <Textarea name="note" rows={2} placeholder="Tell your barber anything helpful." />
+              <span className="text-sm text-white/70">Σημείωση (προαιρετικό)</span>
+              <Textarea name="note" rows={2} placeholder="Τι θα βοηθούσε τον Δημήτρη;" />
             </label>
           </div>
 
           {error && <p className="text-sm text-red-300">{error}</p>}
 
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-xs text-white/60">Lead time enforced. You&apos;ll get a confirmation code to manage your visit.</div>
+            <div className="text-xs text-white/60">Ισχύει lead time. Θα λάβεις κωδικό επιβεβαίωσης.</div>
             <Button type="submit" loading={submitting} disabled={!slotStart}>
-              Book appointment
+              Κλείσε ραντεβού
             </Button>
           </div>
         </form>
       </Card>
 
       <Card className="space-y-4">
-        <h3 className="font-display text-2xl">Your confirmation</h3>
+        <h3 className="font-display text-2xl">Επιβεβαίωση</h3>
         {appointment ? (
           <div className="space-y-3 text-sm text-white/80">
-            <p>Saved for {format(parseISO(appointment.startAt), "EEEE, MMM d @ p")}.</p>
+            <p>Κράτηση για {format(parseISO(appointment.startAt), "EEEE, MMM d @ p")}.</p>
             <p>
-              Code: <span className="font-semibold text-accent-cyan">{appointment.confirmationCode}</span>
+              Κωδικός: <span className="font-semibold text-accent-cyan">{appointment.confirmationCode}</span>
             </p>
             <p>
-              Manage link: <span className="text-accent-cyan">/a/{appointment.cancelToken}</span>
+              Σύνδεσμος διαχείρισης: <span className="text-accent-cyan">/a/{appointment.cancelToken}</span>
             </p>
-            <p>Bring payment for in-shop checkout.</p>
+            <p>Πληρωμή στο κατάστημα.</p>
             <Button asChild variant="secondary">
-              <a href={`/a/${appointment.cancelToken}`}>Open manage page</a>
+              <a href={`/a/${appointment.cancelToken}`}>Άνοιγμα διαχείρισης</a>
             </Button>
           </div>
         ) : (
           <div className="space-y-2 text-sm text-white/70">
-            <p>Select a slot to preview your confirmation details.</p>
-            <p>Need to cancel? Use your code or direct link.</p>
+            <p>Επίλεξε ώρα για να δεις την επιβεβαίωση.</p>
+            <p>Ακύρωση με κωδικό ή direct link.</p>
           </div>
         )}
       </Card>

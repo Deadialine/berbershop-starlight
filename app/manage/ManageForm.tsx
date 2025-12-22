@@ -23,10 +23,10 @@ export function ManageForm() {
         body: JSON.stringify({ code, phone: phone || undefined }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Not found");
+      if (!res.ok) throw new Error(data.error || "Δεν βρέθηκε ραντεβού");
       setAppointment(data.appointment);
     } catch (err: any) {
-      setMessage(err.message);
+      setMessage(err.message || "Κάτι πήγε στραβά");
       setAppointment(null);
     } finally {
       setLoading(false);
@@ -42,11 +42,11 @@ export function ManageForm() {
         body: JSON.stringify({ code }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Unable to cancel");
+      if (!res.ok) throw new Error(data.error || "Δεν ολοκληρώθηκε η ακύρωση");
       setAppointment(data.appointment);
-      setMessage("Cancelled. You can rebook anytime.");
+      setMessage("Ακυρώθηκε. Μπορείς να κλείσεις ξανά όποτε θες.");
     } catch (err: any) {
-      setMessage(err.message);
+      setMessage(err.message || "Κάτι πήγε στραβά");
     } finally {
       setLoading(false);
     }
@@ -56,28 +56,28 @@ export function ManageForm() {
     <div className="space-y-6">
       <Card className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <Input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="Confirmation code" aria-label="Confirmation code" />
-          <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (optional)" aria-label="Phone" />
+          <Input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="Κωδικός επιβεβαίωσης" aria-label="Κωδικός" />
+          <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Τηλέφωνο (προαιρετικό)" aria-label="Τηλέφωνο" />
         </div>
         <Button onClick={lookup} loading={loading} disabled={!code}>
-          Look up appointment
+          Εύρεση ραντεβού
         </Button>
         {message && <p className="text-sm text-white/70">{message}</p>}
       </Card>
       {appointment && (
         <Card className="space-y-2">
-          <h3 className="font-display text-2xl">Appointment</h3>
+          <h3 className="font-display text-2xl">Ραντεβού</h3>
           <p className="text-white/70">{appointment.service?.name}</p>
           <p className="text-white/70">{format(parseISO(appointment.startAt), "EEE, MMM d @ p")}</p>
-          <p className="text-white/50">Code: {appointment.confirmationCode}</p>
-          <p className="text-white/50">Manage link: /a/{appointment.cancelToken}</p>
+          <p className="text-white/50">Κωδικός: {appointment.confirmationCode}</p>
+          <p className="text-white/50">Σύνδεσμος διαχείρισης: /a/{appointment.cancelToken}</p>
           <div className="flex gap-3">
             <Button variant="secondary" asChild>
-              <a href={`/a/${appointment.cancelToken}`}>Open manage link</a>
+              <a href={`/a/${appointment.cancelToken}`}>Άνοιγμα συνδέσμου</a>
             </Button>
             {appointment.status !== "CANCELLED" && (
               <Button variant="ghost" onClick={() => cancel(appointment.id)} loading={loading}>
-                Cancel appointment
+                Ακύρωση
               </Button>
             )}
           </div>

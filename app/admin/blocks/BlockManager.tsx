@@ -49,14 +49,14 @@ export function BlockManager() {
   return (
     <div className="grid gap-6 lg:grid-cols-3">
       <Card className="space-y-3">
-        <h3 className="font-display text-2xl">Block time</h3>
+        <h3 className="font-display text-2xl">Κλείσιμο χρόνου</h3>
         <Input type="datetime-local" value={startAt} onChange={(e) => setStartAt(e.target.value)} />
         <Input type="datetime-local" value={endAt} onChange={(e) => setEndAt(e.target.value)} />
-        <Input placeholder="Reason (optional)" value={reason} onChange={(e) => setReason(e.target.value)} />
-        <Button onClick={save} disabled={!startAt || !endAt}>Save block</Button>
+        <Input placeholder="Λόγος (προαιρετικό)" value={reason} onChange={(e) => setReason(e.target.value)} />
+        <Button onClick={save} disabled={!startAt || !endAt}>Αποθήκευση</Button>
       </Card>
       <Card className="lg:col-span-2 space-y-3">
-        <h3 className="font-display text-2xl">Upcoming blocks</h3>
+        <h3 className="font-display text-2xl">Επερχόμενα κλεισίματα</h3>
         <div className="space-y-2">
           {blocks.map((b) => (
             <div key={b.id} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3 text-sm">
@@ -64,10 +64,10 @@ export function BlockManager() {
                 <div className="font-medium text-white">{b.reason || "Blocked"}</div>
                 <div className="text-white/60">{format(parseISO(b.startAt), "MMM d @ p")} - {format(parseISO(b.endAt), "p")}</div>
               </div>
-              <Button variant="ghost" onClick={() => remove(b.id)}>Remove</Button>
+              <Button variant="ghost" onClick={() => remove(b.id)}>Αφαίρεση</Button>
             </div>
           ))}
-          {!blocks.length && <p className="text-white/60">No blocked times.</p>}
+          {!blocks.length && <p className="text-white/60">Καμία κλειστή ώρα.</p>}
         </div>
       </Card>
     </div>

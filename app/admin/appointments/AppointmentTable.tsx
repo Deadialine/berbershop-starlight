@@ -13,6 +13,13 @@ const statusColors: Record<string, string> = {
   CANCELLED: "text-red-300",
 };
 
+const statusLabel: Record<string, string> = {
+  BOOKED: "Κλεισμένο",
+  COMPLETED: "Ολοκληρωμένο",
+  NOSHOW: "No-show",
+  CANCELLED: "Ακυρωμένο",
+};
+
 type Appointment = {
   id: string;
   customerName: string;
@@ -65,23 +72,23 @@ export function AppointmentTable() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <Select value={filter} onChange={(e) => setFilter(e.target.value)}>
-          <option value="">All</option>
-          <option value="BOOKED">Booked</option>
-          <option value="COMPLETED">Completed</option>
+          <option value="">Όλα</option>
+          <option value="BOOKED">Κλεισμένο</option>
+          <option value="COMPLETED">Ολοκληρωμένο</option>
           <option value="NOSHOW">No-show</option>
-          <option value="CANCELLED">Cancelled</option>
+          <option value="CANCELLED">Ακυρωμένο</option>
         </Select>
-        <Button onClick={load} loading={loading}>Refresh</Button>
+        <Button onClick={load} loading={loading}>Ανανέωση</Button>
       </div>
       <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
         <table className="min-w-full text-sm">
           <thead className="bg-white/5 text-white/60">
             <tr>
-              <th className="px-4 py-3 text-left">Client</th>
-              <th className="px-4 py-3 text-left">Service</th>
-              <th className="px-4 py-3 text-left">Start</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-left">Actions</th>
+              <th className="px-4 py-3 text-left">Πελάτης</th>
+              <th className="px-4 py-3 text-left">Υπηρεσία</th>
+              <th className="px-4 py-3 text-left">Ώρα</th>
+              <th className="px-4 py-3 text-left">Κατάσταση</th>
+              <th className="px-4 py-3 text-left">Ενέργειες</th>
             </tr>
           </thead>
           <tbody>
@@ -95,15 +102,15 @@ export function AppointmentTable() {
                 <td className="px-4 py-3 text-white/70">{a.service?.name}</td>
                 <td className="px-4 py-3 text-white/70">{format(parseISO(a.startAt), "EEE, MMM d @ p")}</td>
                 <td className="px-4 py-3">
-                  <span className={clsx("font-semibold", statusColors[a.status] || "text-white")}>{a.status}</span>
+                  <span className={clsx("font-semibold", statusColors[a.status] || "text-white")}>{statusLabel[a.status] || a.status}</span>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
-                    <Select value={a.status} onChange={(e) => updateStatus(a.id, e.target.value)} aria-label="Status">
-                      <option value="BOOKED">Booked</option>
-                      <option value="COMPLETED">Completed</option>
+                    <Select value={a.status} onChange={(e) => updateStatus(a.id, e.target.value)} aria-label="Κατάσταση">
+                      <option value="BOOKED">Κλεισμένο</option>
+                      <option value="COMPLETED">Ολοκληρωμένο</option>
                       <option value="NOSHOW">No-show</option>
-                      <option value="CANCELLED">Cancelled</option>
+                      <option value="CANCELLED">Ακυρωμένο</option>
                     </Select>
                     <Button asChild variant="secondary">
                       <a href={`/a/${a.cancelToken}`} target="_blank" rel="noreferrer">Link</a>
@@ -114,7 +121,7 @@ export function AppointmentTable() {
             ))}
             {!filtered.length && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-white/50">No appointments found.</td>
+                <td colSpan={5} className="px-4 py-6 text-center text-white/50">Δεν βρέθηκαν ραντεβού.</td>
               </tr>
             )}
           </tbody>

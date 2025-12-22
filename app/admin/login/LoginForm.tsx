@@ -21,7 +21,7 @@ export function LoginForm() {
     setError("");
     const res = await signIn("credentials", { email, password, redirect: false, callbackUrl });
     if (res?.error) {
-      setError("Invalid credentials");
+      setError("Λάθος στοιχεία");
     } else if (res?.ok) {
       window.location.href = callbackUrl;
     }
@@ -30,12 +30,12 @@ export function LoginForm() {
 
   return (
     <Card className="max-w-md space-y-4">
-      <h1 className="font-display text-3xl">Admin login</h1>
+      <h1 className="font-display text-3xl">Είσοδος διαχειριστή</h1>
       <form onSubmit={submit} className="space-y-3">
         <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="username" />
-        <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
+        <Input type="password" placeholder="Κωδικός" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
         {error && <p className="text-sm text-red-300">{error}</p>}
-        <Button type="submit" loading={loading} className="w-full">Sign in</Button>
+        <Button type="submit" loading={loading} className="w-full">Είσοδος</Button>
       </form>
     </Card>
   );

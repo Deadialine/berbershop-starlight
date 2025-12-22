@@ -29,11 +29,11 @@ export function TokenManager({ id, token, initialStatus }: { id: string; token: 
   return (
     <div className="flex gap-3">
       <Button variant="secondary" disabled>
-        Status: {status}
+        Κατάσταση: {status}
       </Button>
       {!isCancelled && (
         <Button variant="ghost" onClick={cancel} loading={loading}>
-          Cancel appointment
+          Ακύρωση
         </Button>
       )}
     </div>

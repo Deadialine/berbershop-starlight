@@ -55,15 +55,15 @@ export function ServiceManager() {
   return (
     <div className="grid gap-6 lg:grid-cols-3">
       <Card className="space-y-3">
-        <h3 className="font-display text-2xl">Add service</h3>
-        <Input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+        <h3 className="font-display text-2xl">Νέα υπηρεσία</h3>
+        <Input placeholder="Όνομα" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         <Input
-          placeholder="Duration (min)"
+          placeholder="Διάρκεια (λεπτά)"
           type="number"
           value={form.durationMinutes}
           onChange={(e) => setForm({ ...form, durationMinutes: Number(e.target.value) })}
         />
-        <Input placeholder="Price text" value={form.priceText} onChange={(e) => setForm({ ...form, priceText: e.target.value })} />
+        <Input placeholder="Τιμή (κείμενο)" value={form.priceText} onChange={(e) => setForm({ ...form, priceText: e.target.value })} />
         <div className="flex items-center gap-2 text-sm text-white/70">
           <input
             type="checkbox"
@@ -71,12 +71,12 @@ export function ServiceManager() {
             onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
             className="h-4 w-4 rounded border-white/20 bg-white/5"
           />
-          Active
+          Ενεργή
         </div>
-        <Button onClick={save} disabled={!form.name}>Save</Button>
+        <Button onClick={save} disabled={!form.name}>Αποθήκευση</Button>
       </Card>
       <Card className="lg:col-span-2 space-y-3">
-        <h3 className="font-display text-2xl">Current services</h3>
+        <h3 className="font-display text-2xl">Τρέχουσες υπηρεσίες</h3>
         <div className="space-y-3">
           {services.map((s) => (
             <div key={s.id} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3 text-sm">
@@ -86,14 +86,14 @@ export function ServiceManager() {
               </div>
               <div className="flex items-center gap-2">
                 <Select value={s.isActive ? "1" : "0"} onChange={() => toggle(s)}>
-                  <option value="1">Active</option>
-                  <option value="0">Hidden</option>
+                  <option value="1">Ενεργή</option>
+                  <option value="0">Κρυφή</option>
                 </Select>
-                <Button variant="ghost" onClick={() => remove(s.id)}>Delete</Button>
+                <Button variant="ghost" onClick={() => remove(s.id)}>Διαγραφή</Button>
               </div>
             </div>
           ))}
-          {!services.length && <p className="text-white/60">No services yet.</p>}
+          {!services.length && <p className="text-white/60">Καμία υπηρεσία.</p>}
         </div>
       </Card>
     </div>

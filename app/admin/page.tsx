@@ -24,24 +24,24 @@ export default async function AdminHome() {
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
-          <p className="text-sm text-white/60">Active services</p>
+          <p className="text-sm text-white/60">Ενεργές υπηρεσίες</p>
           <p className="font-display text-4xl">{servicesCount}</p>
         </Card>
         <Card>
-          <p className="text-sm text-white/60">Today&apos;s bookings</p>
+          <p className="text-sm text-white/60">Σήμερα</p>
           <p className="font-display text-4xl">{bookedToday}</p>
         </Card>
         <Card>
-          <p className="text-sm text-white/60">Upcoming preview</p>
+          <p className="text-sm text-white/60">Επόμενα ραντεβού</p>
           <p className="font-display text-4xl">{upcoming.length}</p>
         </Card>
       </div>
       <Card className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-2xl">Next appointments</h2>
-          <Link href="/admin/appointments" className="text-sm text-accent-cyan">Manage all</Link>
+          <h2 className="font-display text-2xl">Επερχόμενα</h2>
+          <Link href="/admin/appointments" className="text-sm text-accent-cyan">Διαχείριση</Link>
         </div>
-        {upcoming.length === 0 && <p className="text-white/60">No upcoming bookings.</p>}
+        {upcoming.length === 0 && <p className="text-white/60">Δεν υπάρχουν προσεχή ραντεβού.</p>}
         <div className="space-y-2">
           {upcoming.map((a) => (
             <div key={a.id} className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2 text-sm text-white/80">

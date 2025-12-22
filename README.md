@@ -1,6 +1,6 @@
 # Starlight Barbershop
 
-Modern dark-mode booking experience for **Starlight Barbershop** with neon cyan + warm white accents and admin controls.
+Modern dark-mode booking experience for **Starlight Barbershop** (Δημήτρης Λεοντακιανάκης) με neon cyan + warm white accents και πλήρη διαχείριση.
 
 ## Stack
 - Next.js (App Router) + TypeScript
@@ -30,8 +30,9 @@ Visit `http://localhost:3000` for the public site and `http://localhost:3000/adm
 ## Features
 - Public booking with availability respecting lead time, 30-day window, business hours, blocked times, and no double-booking.
 - Confirmation code + cancel token link for self-management (`/manage` or `/a/[token]`).
-- Admin dashboard with appointment status updates, service CRUD, block scheduling, and CSV export.
-- Design language: charcoal background, neon cyan glow, warm white accents, emerald highlights, hex pattern background, LED arch glow, and “Since 1977” branding.
+- Customer reviews submission + admin moderation (approved reviews surface on the site).
+- Admin dashboard with appointment status updates, service CRUD, block scheduling, reviews moderation, and CSV export.
+- Design language: charcoal background, neon cyan glow, warm white accents, emerald highlights, hex pattern background, LED arch glow, and “Από το 2025” branding.
 
 ## Scripts
 - `npm run dev` – start dev server

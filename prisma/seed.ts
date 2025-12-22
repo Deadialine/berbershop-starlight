@@ -5,14 +5,14 @@ const prisma = new PrismaClient();
 
 async function main() {
   const services = [
-    { name: "Signature Fade", durationMinutes: 45, priceText: "$45" },
-    { name: "Skin Fade + Beard", durationMinutes: 60, priceText: "$65" },
-    { name: "Beard Sculpt & Hot Towel", durationMinutes: 30, priceText: "$35" },
-    { name: "Kids Cut", durationMinutes: 30, priceText: "$30" },
-    { name: "Buzz & Clean Up", durationMinutes: 25, priceText: "$28" },
-    { name: "Razor Shave", durationMinutes: 35, priceText: "$40" },
-    { name: "Wash & Style", durationMinutes: 25, priceText: "$25" },
-    { name: "Line Up", durationMinutes: 20, priceText: "$20" },
+    { name: "Κούρεμα", durationMinutes: 30, priceText: "€10" },
+    { name: "Fade", durationMinutes: 40, priceText: "€12" },
+    { name: "Ξύρισμα/Σχήμα Γενειάδας", durationMinutes: 20, priceText: "€5" },
+    { name: "Fade + Γένια", durationMinutes: 55, priceText: "€17" },
+    { name: "Κούρεμα Παιδικό", durationMinutes: 30, priceText: "€10" },
+    { name: "Λούσιμο & Styling", durationMinutes: 20, priceText: "€6" },
+    { name: "Line Up / Καθάρισμα", durationMinutes: 20, priceText: "€8" },
+    { name: "Ξυριστική Τελετουργία", durationMinutes: 35, priceText: "€9" },
   ];
 
   for (const service of services) {

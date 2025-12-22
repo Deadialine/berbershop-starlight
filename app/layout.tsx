@@ -7,8 +7,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 const bebas = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-bebas", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Starlight Barbershop | Modern Cuts & Appointments",
-  description: "Book premium cuts at Starlight Barbershop. Modern, sleek, and effortless scheduling.",
+  title: "Starlight Barbershop | Κουρεία Δημήτρης Λεοντακιανάκης",
+  description: "Κλείσε ραντεβού σε σύγχρονο barber lounge στη Σκάλα Λακωνίας, με neon αισθητική και εμπειρία στα fades.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
