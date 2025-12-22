@@ -13,3 +13,6 @@ pnpm-debug.log*
 .prisma
 sqlite.db
 sqlite.db-journal
+
+# local prisma db
+prisma/dev.db
