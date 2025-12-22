@@ -4,15 +4,10 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = env("file:./dev.db")
 }
 
-enum AppointmentStatus {
-  BOOKED
-  CANCELLED
-  COMPLETED
-  NOSHOW
-}
+
 
 model Service {
   id              String        @id @default(cuid())
@@ -33,7 +28,7 @@ model Appointment {
   note             String?
   startAt          DateTime
   endAt            DateTime
-  status           AppointmentStatus  @default(BOOKED)
+  status           String  @default("BOOKED")
   confirmationCode String             @unique
   cancelToken      String             @unique
   serviceId        String
