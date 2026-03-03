@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sparkles, PhoneCall, Clock3, MapPin, Quote } from "lucide-react";
 
+import { dbx } from "@/lib/data";
+
 export default async function HomePage() {
-  const services: Array<{ id: string; name: string; durationMinutes: number; priceText: string }> = [];
-  const reviews: Array<{ id: string; rating: number; comment: string; name: string }> = [];
+  const services = dbx.listServices(true).slice(0, 6);
+  const reviews = dbx.listReviews(true).slice(0, 4);
 
   return (
     <main className="relative overflow-hidden">

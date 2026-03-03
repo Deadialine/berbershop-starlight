@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { appointmentSchema } from "@/lib/validation";
 import { randomBytes } from "crypto";
 import { addMinutes, isBefore } from "date-fns";
 import { getAvailableSlots } from "@/lib/slots";
+import { dbx } from "@/lib/data";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 function generateCode() {
-  return randomBytes(4).toString("hex").slice(0, 6).toUpperCase();
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  return Array.from({ length: 6 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
 }
 
 function generateToken() {
-  return randomBytes(12).toString("hex");
+  return randomBytes(24).toString("hex");
 }
 
 export async function POST(req: NextRequest) {
@@ -19,32 +22,37 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   const data = parsed.data;
 
-  const service = await prisma.service.findUnique({ where: { id: data.serviceId } });
+  const service = dbx.getServiceById(data.serviceId);
   if (!service || !service.isActive) return NextResponse.json({ error: "Service unavailable" }, { status: 404 });
 
   const slotStart = new Date(data.slotStart);
   const slotEnd = addMinutes(slotStart, service.durationMinutes);
-
   const slots = await getAvailableSlots(data.slotStart.slice(0, 10), service.durationMinutes);
   const slotAllowed = slots.some((slot) => new Date(slot.start).getTime() === slotStart.getTime());
   if (!slotAllowed) return NextResponse.json({ error: "Slot no longer available" }, { status: 409 });
-
   if (isBefore(slotEnd, slotStart)) return NextResponse.json({ error: "Invalid time" }, { status: 400 });
+  if (!data.customerEmail && !data.customerPhone) return NextResponse.json({ error: "Email or phone is required" }, { status: 400 });
 
-  const appointment = await prisma.appointment.create({
-    data: {
-      customerName: data.customerName,
-      customerPhone: data.customerPhone,
-      customerEmail: data.customerEmail || undefined,
-      note: data.note,
-      startAt: slotStart,
-      endAt: slotEnd,
-      serviceId: data.serviceId,
-      confirmationCode: generateCode(),
-      cancelToken: generateToken(),
-    },
-    include: { service: true },
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as any)?.role === "guest" ? (session?.user as any).id : null;
+
+  if (dbx.hasConflictingAppointment(slotStart.toISOString(), slotEnd.toISOString())) {
+    return NextResponse.json({ error: "Slot no longer available" }, { status: 409 });
+  }
+
+  const appointment = dbx.createAppointment({
+    customerName: data.customerName,
+    customerPhone: data.customerPhone,
+    customerEmail: data.customerEmail || null,
+    note: data.note || null,
+    startAt: slotStart.toISOString(),
+    endAt: slotEnd.toISOString(),
+    serviceId: data.serviceId,
+    confirmationCode: generateCode(),
+    cancelToken: generateToken(),
+    userId,
+    status: "BOOKED",
   });
 
-  return NextResponse.json({ appointment });
+  return NextResponse.json({ appointment: { ...appointment, service } });
 }

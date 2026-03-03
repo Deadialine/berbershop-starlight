@@ -166,11 +166,12 @@ export function BookForm({ services }: { services: Service[] }) {
             </label>
             <label className="space-y-2">
               <span className="text-sm text-white/70">Τηλέφωνο</span>
-              <Input name="phone" type="tel" inputMode="tel" placeholder="+30" required />
+              <Input name="phone" type="tel" inputMode="tel" placeholder="+30" />
             </label>
             <label className="space-y-2">
               <span className="text-sm text-white/70">Email (προαιρετικό)</span>
               <Input name="email" type="email" placeholder="you@email.com" />
+              <p className="text-xs text-white/50">Συμπλήρωσε τουλάχιστον τηλέφωνο ή email.</p>
             </label>
             <label className="space-y-2">
               <span className="text-sm text-white/70">Σημείωση (προαιρετικό)</span>

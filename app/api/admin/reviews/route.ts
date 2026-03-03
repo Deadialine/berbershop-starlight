@@ -1,50 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import { requireAdmin } from "@/lib/admin";
 import { reviewSchema } from "@/lib/validation";
+import { dbx } from "@/lib/data";
 
-async function requireAdmin() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  return null;
-}
-
-export async function GET() {
-  const gate = await requireAdmin();
-  if (gate) return gate;
-  const reviews = await prisma.review.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-  return NextResponse.json(reviews);
-}
+export async function GET() { const gate = await requireAdmin(); if (gate) return gate; return NextResponse.json(dbx.listReviews(false)); }
 
 export async function POST(req: NextRequest) {
-  const gate = await requireAdmin();
-  if (gate) return gate;
-  const body = await req.json();
-  const parsed = reviewSchema.safeParse(body);
+  const gate = await requireAdmin(); if (gate) return gate;
+  const parsed = reviewSchema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  const review = await prisma.review.create({ data: { ...parsed.data, status: "APPROVED" } });
-  return NextResponse.json(review);
+  return NextResponse.json(dbx.createReview({ ...parsed.data, status: "APPROVED" }));
 }
 
 export async function PUT(req: NextRequest) {
-  const gate = await requireAdmin();
-  if (gate) return gate;
-  const body = await req.json();
-  const { id, status } = body ?? {};
+  const gate = await requireAdmin(); if (gate) return gate;
+  const { id, status } = await req.json();
   if (!id || !status) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
-  const updated = await prisma.review.update({ where: { id }, data: { status } });
-  return NextResponse.json(updated);
+  dbx.updateReviewStatus(id, status);
+  return NextResponse.json({ ok: true });
 }
 
 export async function DELETE(req: NextRequest) {
-  const gate = await requireAdmin();
-  if (gate) return gate;
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
+  const gate = await requireAdmin(); if (gate) return gate;
+  const id = new URL(req.url).searchParams.get("id");
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
-  await prisma.review.delete({ where: { id } });
+  dbx.deleteReview(id);
   return NextResponse.json({ ok: true });
 }

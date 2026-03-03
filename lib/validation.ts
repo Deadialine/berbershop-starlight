@@ -1,13 +1,18 @@
 import { z } from "zod";
 
-export const appointmentSchema = z.object({
-  serviceId: z.string().min(1),
-  slotStart: z.string().min(1),
-  customerName: z.string().min(2),
-  customerPhone: z.string().min(7),
-  customerEmail: z.string().email().optional().or(z.literal("")),
-  note: z.string().max(500).optional(),
-});
+export const appointmentSchema = z
+  .object({
+    serviceId: z.string().min(1),
+    slotStart: z.string().min(1),
+    customerName: z.string().min(2),
+    customerPhone: z.string().min(7).optional().or(z.literal("")),
+    customerEmail: z.string().email().optional().or(z.literal("")),
+    note: z.string().max(500).optional(),
+  })
+  .refine((v) => !!(v.customerPhone || v.customerEmail), {
+    message: "Provide phone or email",
+    path: ["customerPhone"],
+  });
 
 export const lookupSchema = z.object({
   code: z.string().min(4),
