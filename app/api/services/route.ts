@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { dbx } from "@/lib/data";
 
 export async function GET() {
-  const services = await prisma.service.findMany({ where: { isActive: true }, orderBy: { name: "asc" } });
-  return NextResponse.json(services);
+  return NextResponse.json(dbx.listServices(true));
 }

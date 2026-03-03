@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/admin/login")) return NextResponse.next();
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  if (!token) {
+  if (!token || token.role !== "admin") {
     const signInUrl = new URL("/admin/login", req.url);
     return NextResponse.redirect(signInUrl);
   }

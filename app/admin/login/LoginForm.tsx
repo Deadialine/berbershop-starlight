@@ -31,8 +31,9 @@ export function LoginForm() {
   return (
     <Card className="max-w-md space-y-4">
       <h1 className="font-display text-3xl">Είσοδος διαχειριστή</h1>
+      <p className="text-sm text-white/60">Demo credentials: admin / admin</p>
       <form onSubmit={submit} className="space-y-3">
-        <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="username" />
+        <Input type="text" placeholder="Username or email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="username" />
         <Input type="password" placeholder="Κωδικός" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
         {error && <p className="text-sm text-red-300">{error}</p>}
         <Button type="submit" loading={loading} className="w-full">Είσοδος</Button>
