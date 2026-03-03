@@ -43,5 +43,7 @@ Visit `http://localhost:3000` for the public site and `http://localhost:3000/adm
 - `npm run prisma:studio` – open Prisma Studio
 - `npm run prisma:seed` – seed database
 
+- Apo npx run npx prisma generate
+
 ## Database
 Times are stored in UTC. Business timezone defaults to America/New_York and can be changed via env. Business rules live in `lib/config.ts`.
