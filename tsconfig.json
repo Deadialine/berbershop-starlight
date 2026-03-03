@@ -24,6 +24,12 @@
         "./*"
       ]
     },
+    "types": [
+      "next",
+      "next-auth",
+      "next/types/global",
+      "next/navigation-types/compat"
+    ],
     "plugins": [
       {
         "name": "next"

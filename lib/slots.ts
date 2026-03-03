@@ -1,5 +1,5 @@
 import { addMinutes, isAfter, isBefore } from "date-fns";
-import { fromZonedTime, toZonedTime } from "date-fns-tz";
+import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
 import { dbx } from "./data";
 import { BOOKING_WINDOW_DAYS, BUSINESS_HOURS, LEAD_TIME_HOURS, SLOT_INCREMENT_MINUTES, getBusinessTimezone } from "./config";
 
@@ -36,8 +36,8 @@ export async function getAvailableSlots(date: string, serviceDuration: number) {
 
     if (!dbx.hasConflictingAppointment(slotStart.toISOString(), slotEnd.toISOString())) {
       slots.push({
-        start: toZonedTime(slotStart.toISOString(), tz).toISOString(),
-        end: toZonedTime(slotEnd.toISOString(), tz).toISOString(),
+        start: utcToZonedTime(slotStart.toISOString(), tz).toISOString(),
+        end: utcToZonedTime(slotEnd.toISOString(), tz).toISOString(),
       });
     }
 

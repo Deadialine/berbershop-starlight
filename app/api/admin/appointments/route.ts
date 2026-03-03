@@ -31,23 +31,8 @@ export async function POST(req: NextRequest) {
   const parsed = appointmentAdminSchema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   const data = parsed.data;
-  try {
-    return NextResponse.json(
-      dbx.createAppointment({
-        ...data,
-        customerEmail: data.customerEmail || null,
-        note: data.note || null,
-        userId: null,
-        confirmationCode: code(),
-        cancelToken: token(),
-      })
-    );
-  } catch (error) {
-    if (error instanceof Error && error.message === "CONFLICT") {
-      return NextResponse.json({ error: "Conflicting appointment" }, { status: 409 });
-    }
-    throw error;
-  }
+  if (dbx.hasConflictingAppointment(data.startAt, data.endAt)) return NextResponse.json({ error: "Conflicting appointment" }, { status: 409 });
+  return NextResponse.json(dbx.createAppointment({ ...data, customerEmail: data.customerEmail || null, note: data.note || null, userId: null, confirmationCode: code(), cancelToken: token() }));
 }
 
 export async function PUT(req: NextRequest) {
@@ -55,16 +40,8 @@ export async function PUT(req: NextRequest) {
   const parsed = appointmentAdminSchema.safeParse(await req.json());
   if (!parsed.success || !parsed.data.id) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   const { id, ...rest } = parsed.data;
-  try {
-    return NextResponse.json(
-      dbx.updateAppointment(id, { ...rest, customerEmail: rest.customerEmail || null, note: rest.note || null })
-    );
-  } catch (error) {
-    if (error instanceof Error && error.message === "CONFLICT") {
-      return NextResponse.json({ error: "Conflicting appointment" }, { status: 409 });
-    }
-    throw error;
-  }
+  if (dbx.hasConflictingAppointment(rest.startAt, rest.endAt, id)) return NextResponse.json({ error: "Conflicting appointment" }, { status: 409 });
+  return NextResponse.json(dbx.updateAppointment(id, { ...rest, customerEmail: rest.customerEmail || null, note: rest.note || null }));
 }
 
 export async function DELETE(req: NextRequest) {

@@ -36,11 +36,13 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const userId = (session?.user as any)?.role === "guest" ? (session?.user as any).id : null;
 
-  let appointment;
-  try {
-    appointment = dbx.createAppointment({
+  if (dbx.hasConflictingAppointment(slotStart.toISOString(), slotEnd.toISOString())) {
+    return NextResponse.json({ error: "Slot no longer available" }, { status: 409 });
+  }
+
+  const appointment = dbx.createAppointment({
     customerName: data.customerName,
-    customerPhone: data.customerPhone || null,
+    customerPhone: data.customerPhone,
     customerEmail: data.customerEmail || null,
     note: data.note || null,
     startAt: slotStart.toISOString(),
@@ -50,13 +52,7 @@ export async function POST(req: NextRequest) {
     cancelToken: generateToken(),
     userId,
     status: "BOOKED",
-    });
-  } catch (error) {
-    if (error instanceof Error && error.message === "CONFLICT") {
-      return NextResponse.json({ error: "Slot no longer available" }, { status: 409 });
-    }
-    throw error;
-  }
+  });
 
   return NextResponse.json({ appointment: { ...appointment, service } });
 }
