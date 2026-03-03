@@ -6,7 +6,7 @@ import { BOOKING_WINDOW_DAYS, BUSINESS_HOURS, LEAD_TIME_HOURS, SLOT_INCREMENT_MI
 export type Slot = { start: string; end: string };
 
 function parseTime(date: string, time: string, tz: string) {
-  return zonedTimeToUtc(`${date}T${time}:00`, tz);
+  return fromZonedTime(`${date}T${time}:00`, tz);
 }
 
 export async function getAvailableSlots(date: string, serviceDuration: number) {

@@ -20,7 +20,12 @@ export default async function AppointmentByToken({ params }: Props) {
           <p className="text-white/70">{format(new Date(appointment.startAt), "EEEE, MMM d @ p")}</p>
           <p className="text-white/60">Κωδικός: {appointment.confirmationCode}</p>
           <p className="text-white/60">Κατάσταση: {statusLabel[appointment.status] || appointment.status}</p>
-          <TokenManager id={appointment.id} token={appointment.cancelToken} initialStatus={appointment.status} />
+          <TokenManager
+            id={appointment.id}
+            token={appointment.cancelToken}
+            serviceId={appointment.serviceId}
+            initialStatus={appointment.status}
+          />
         </Card>
       </div>
     </div>

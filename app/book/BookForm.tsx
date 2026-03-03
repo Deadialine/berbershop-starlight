@@ -202,9 +202,7 @@ export function BookForm({ services }: { services: Service[] }) {
               Σύνδεσμος διαχείρισης: <span className="text-accent-cyan">/a/{appointment.cancelToken}</span>
             </p>
             <p>Πληρωμή στο κατάστημα.</p>
-            <Button asChild variant="secondary">
-              <a href={`/a/${appointment.cancelToken}`}>Άνοιγμα διαχείρισης</a>
-            </Button>
+            <a href={`/a/${appointment.cancelToken}`} className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15">Άνοιγμα διαχείρισης</a>
           </div>
         ) : (
           <div className="space-y-2 text-sm text-white/70">

@@ -2,8 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+ :root {
   color-scheme: dark;
+  --font-inter: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-bebas: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
 }
 
 body {
