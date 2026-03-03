@@ -1,42 +1,11 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { requireAdmin } from "@/lib/admin";
+import { dbx } from "@/lib/data";
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const appointments = await prisma.appointment.findMany({ include: { service: true }, orderBy: { startAt: "asc" } });
-  const header = [
-    "id",
-    "customerName",
-    "customerPhone",
-    "customerEmail",
-    "service",
-    "status",
-    "startAt",
-    "endAt",
-    "note",
-    "confirmationCode",
-  ];
-  const rows = appointments.map((a) => [
-    a.id,
-    a.customerName,
-    a.customerPhone,
-    a.customerEmail || "",
-    a.service?.name || "",
-    a.status,
-    a.startAt.toISOString(),
-    a.endAt.toISOString(),
-    a.note?.replace(/\n/g, " ") || "",
-    a.confirmationCode,
-  ]);
-  const csv = [header, ...rows].map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
-  return new NextResponse(csv, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/csv",
-      "Content-Disposition": `attachment; filename=starlight-appointments.csv`,
-    },
-  });
+  const gate = await requireAdmin(); if (gate) return gate;
+  const appointments = dbx.listAppointments();
+  const header = ["id","customerName","customerEmail","customerPhone","service","startAt","endAt","status","confirmationCode"];
+  const lines = appointments.map((a:any)=>[a.id,a.customerName,a.customerEmail||"",a.customerPhone||"",a.service?.name||"",a.startAt,a.endAt,a.status,a.confirmationCode].map((v:string)=>`"${String(v).replaceAll('"','""')}"`).join(","));
+  return new NextResponse([header.join(","), ...lines].join("\n"), { headers: { "Content-Type": "text/csv", "Content-Disposition": "attachment; filename=appointments.csv" } });
 }

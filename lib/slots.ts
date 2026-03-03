@@ -1,15 +1,12 @@
-import { addMinutes, isBefore, isAfter } from "date-fns";
-import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
-import { prisma } from "./prisma";
+import { addMinutes, isAfter, isBefore } from "date-fns";
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
+import { dbx } from "./data";
 import { BOOKING_WINDOW_DAYS, BUSINESS_HOURS, LEAD_TIME_HOURS, SLOT_INCREMENT_MINUTES, getBusinessTimezone } from "./config";
 
-export type Slot = {
-  start: string; // ISO string in UTC
-  end: string;
-};
+export type Slot = { start: string; end: string };
 
 function parseTime(date: string, time: string, tz: string) {
-  return zonedTimeToUtc(`${date}T${time}:00`, tz);
+  return fromZonedTime(`${date}T${time}:00`, tz);
 }
 
 export async function getAvailableSlots(date: string, serviceDuration: number) {
@@ -20,25 +17,10 @@ export async function getAvailableSlots(date: string, serviceDuration: number) {
 
   const windowEnd = addMinutes(new Date(), BOOKING_WINDOW_DAYS * 24 * 60);
   const leadTime = addMinutes(new Date(), LEAD_TIME_HOURS * 60);
-
   const dayStart = parseTime(date, hours.start, tz);
   const dayEnd = parseTime(date, hours.end, tz);
 
   if (isAfter(dayStart, windowEnd)) return [];
-
-  const appointments = await prisma.appointment.findMany({
-    where: {
-      startAt: { gte: dayStart, lte: dayEnd },
-      status: { in: ["BOOKED", "COMPLETED", "NOSHOW"] },
-    },
-  });
-
-  const blocks = await prisma.blockedTime.findMany({
-    where: {
-      startAt: { lte: dayEnd },
-      endAt: { gte: dayStart },
-    },
-  });
 
   const slots: Slot[] = [];
   let cursor = dayStart;
@@ -52,27 +34,14 @@ export async function getAvailableSlots(date: string, serviceDuration: number) {
     }
     if (isAfter(slotStart, windowEnd)) break;
 
-    const overlapsAppointment = appointments.some((appt) =>
-      (isBefore(slotStart, appt.endAt) && isAfter(slotEnd, appt.startAt))
-    );
-    if (overlapsAppointment) {
-      cursor = addMinutes(cursor, SLOT_INCREMENT_MINUTES);
-      continue;
+    if (!dbx.hasConflictingAppointment(slotStart.toISOString(), slotEnd.toISOString())) {
+      slots.push({
+        start: toZonedTime(slotStart.toISOString(), tz).toISOString(),
+        end: toZonedTime(slotEnd.toISOString(), tz).toISOString(),
+      });
     }
 
-    const overlapsBlock = blocks.some((block) =>
-      isBefore(slotStart, block.endAt) && isAfter(slotEnd, block.startAt)
-    );
-    if (overlapsBlock) {
-      cursor = addMinutes(cursor, SLOT_INCREMENT_MINUTES);
-      continue;
-    }
-
-    slots.push({ start: slotStart.toISOString(), end: slotEnd.toISOString() });
     cursor = addMinutes(cursor, SLOT_INCREMENT_MINUTES);
   }
-  return slots.map((slot) => ({
-    start: utcToZonedTime(slot.start, tz).toISOString(),
-    end: utcToZonedTime(slot.end, tz).toISOString(),
-  }));
+  return slots;
 }

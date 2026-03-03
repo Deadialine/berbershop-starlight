@@ -166,11 +166,12 @@ export function BookForm({ services }: { services: Service[] }) {
             </label>
             <label className="space-y-2">
               <span className="text-sm text-white/70">Τηλέφωνο</span>
-              <Input name="phone" type="tel" inputMode="tel" placeholder="+30" required />
+              <Input name="phone" type="tel" inputMode="tel" placeholder="+30" />
             </label>
             <label className="space-y-2">
               <span className="text-sm text-white/70">Email (προαιρετικό)</span>
               <Input name="email" type="email" placeholder="you@email.com" />
+              <p className="text-xs text-white/50">Συμπλήρωσε τουλάχιστον τηλέφωνο ή email.</p>
             </label>
             <label className="space-y-2">
               <span className="text-sm text-white/70">Σημείωση (προαιρετικό)</span>
@@ -201,9 +202,7 @@ export function BookForm({ services }: { services: Service[] }) {
               Σύνδεσμος διαχείρισης: <span className="text-accent-cyan">/a/{appointment.cancelToken}</span>
             </p>
             <p>Πληρωμή στο κατάστημα.</p>
-            <Button asChild variant="secondary">
-              <a href={`/a/${appointment.cancelToken}`}>Άνοιγμα διαχείρισης</a>
-            </Button>
+            <a href={`/a/${appointment.cancelToken}`} className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15">Άνοιγμα διαχείρισης</a>
           </div>
         ) : (
           <div className="space-y-2 text-sm text-white/70">
