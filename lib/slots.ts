@@ -1,5 +1,5 @@
 import { addMinutes, isAfter, isBefore } from "date-fns";
-import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
+import { fromZonedTime } from 'date-fns-tz'; // Ensure the correct import
 import { dbx } from "./data";
 import { BOOKING_WINDOW_DAYS, BUSINESS_HOURS, LEAD_TIME_HOURS, SLOT_INCREMENT_MINUTES, getBusinessTimezone } from "./config";
 
@@ -7,6 +7,12 @@ export type Slot = { start: string; end: string };
 
 function parseTime(date: string, time: string, tz: string) {
   return fromZonedTime(`${date}T${time}:00`, tz);
+}
+
+function zonedToUtc(date: Date, tz: string): Date {
+  // Convert zoned time to UTC manually using fromZonedTime function
+  const zonedDate = fromZonedTime(date.toISOString(), tz);
+  return new Date(zonedDate.getTime()); // Convert the zonedDate back to UTC
 }
 
 export async function getAvailableSlots(date: string, serviceDuration: number) {
@@ -35,9 +41,10 @@ export async function getAvailableSlots(date: string, serviceDuration: number) {
     if (isAfter(slotStart, windowEnd)) break;
 
     if (!dbx.hasConflictingAppointment(slotStart.toISOString(), slotEnd.toISOString())) {
+      // Manually convert zoned time to UTC using the new function
       slots.push({
-        start: utcToZonedTime(slotStart.toISOString(), tz).toISOString(),
-        end: utcToZonedTime(slotEnd.toISOString(), tz).toISOString(),
+        start: zonedToUtc(slotStart, tz).toISOString(),
+        end: zonedToUtc(slotEnd, tz).toISOString(),
       });
     }
 
