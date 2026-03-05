@@ -35,7 +35,7 @@ export default function InfoPage() {
           <div>
             <h3 className="font-display text-2xl">Υπηρεσίες</h3>
             <p className="text-white/70">Κούρεμα €10, Fade €12, Γένια €5, Fade + Γένια €17, παιδικά κουρέματα, λούσιμο & styling. Πληρωμή στο κατάστημα.</p>
-            <Button asChild className="mt-4"><Link href="/book">Κλείσε ραντεβού</Link></Button>
+            <Link href="/book" className="mt-4 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-accent-cyan to-accent-emerald px-4 py-2 text-sm font-semibold text-charcoal shadow-glow hover:brightness-110">Κλείσε ραντεβού</Link>
           </div>
           <div>
             <h3 className="font-display text-2xl">Ακύρωση</h3>

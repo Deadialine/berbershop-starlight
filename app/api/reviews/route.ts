@@ -1,29 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { reviewSchema } from "@/lib/validation";
+import { dbx } from "@/lib/data";
 
 export async function GET() {
-  const reviews = await prisma.review.findMany({
-    where: { status: "APPROVED" },
-    orderBy: { createdAt: "desc" },
-    take: 20,
-  });
-  return NextResponse.json(reviews);
+  return NextResponse.json(dbx.listReviews(true).slice(0, 20));
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const parsed = reviewSchema.safeParse(body);
+  const parsed = reviewSchema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   const { name, rating, comment, appointmentId } = parsed.data;
-  const review = await prisma.review.create({
-    data: {
-      name,
-      rating,
-      comment,
-      appointmentId: appointmentId || undefined,
-      status: "PENDING",
-    },
-  });
-  return NextResponse.json({ review });
+  return NextResponse.json({ review: dbx.createReview({ name, rating, comment, appointmentId, status: "PENDING" }) });
 }

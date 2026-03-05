@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sparkles, PhoneCall, Clock3, MapPin, Quote } from "lucide-react";
 
+import { dbx } from "@/lib/data";
+
 export default async function HomePage() {
-  const services: Array<{ id: string; name: string; durationMinutes: number; priceText: string }> = [];
-  const reviews: Array<{ id: string; rating: number; comment: string; name: string }> = [];
+  const services = dbx.listServices(true).slice(0, 6);
+  const reviews = dbx.listReviews(true).slice(0, 4);
 
   return (
     <main className="relative overflow-hidden">
@@ -69,7 +71,7 @@ export default async function HomePage() {
                 <p className="text-white/70">Οι υπηρεσίες θα εμφανιστούν μόλις ρυθμιστεί η βάση δεδομένων.</p>
               </Card>
             )}
-            {services.map((service) => (
+            {services.map((service: { id: string; name: string; durationMinutes: number; priceText: string }) => (
               <Card key={service.id} className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <h3 className="font-display text-2xl text-white">{service.name}</h3>
@@ -99,7 +101,7 @@ export default async function HomePage() {
 
           <div className="grid gap-4 md:grid-cols-2">
             {reviews.length === 0 && <p className="text-white/60">Οι πρώτες κριτικές έρχονται σύντομα.</p>}
-            {reviews.map((review) => (
+            {reviews.map((review: { id: string; rating: number; comment: string; name: string }) => (
               <Card key={review.id} className="relative overflow-hidden p-6">
                 <div className="flex items-center gap-2 text-accent-cyan">
                   <Quote className="h-4 w-4" />

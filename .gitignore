@@ -16,3 +16,7 @@ sqlite.db-journal
 
 # local prisma db
 prisma/dev.db
+
+# local sqlite db
+data/*.db
+data/*.db-*
